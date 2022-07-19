@@ -63,7 +63,6 @@ const RevStoreTest = () => {
           }}>
           JWT検証
         </Button>
-
         <TextField value={_.isNull(isValid) ? '' : isValid} disabled />
 
         <Button
@@ -77,7 +76,6 @@ const RevStoreTest = () => {
           }}>
           ダウンロード
         </Button>
-
         <TextField
           multiline
           value={downloadUrl || ''}
