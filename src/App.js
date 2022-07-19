@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { DateTime } from 'luxon'
 import { useRef, useState } from 'react'
 import loadImage from 'blueimp-load-image'
 import { Button, Container, TextField, Stack } from '@mui/material'
@@ -11,27 +12,22 @@ const RevStoreTest = () => {
   const [downloadUrl, setDownloadUrl] = useState('')
   const [isValid, setIsValid] = useState(null)
 
-  const endpoint = 'http://localhost:3000'
+  const endpoint = process.env.REACT_APP_END_POINT
 
-  const firebaseConfig = {
-    apiKey: process.env.REACT_APP_API_KEY,
-    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_APP_ID,
-  }
-
-  const handleChangeFile = async (e) => {
-    const { files } = e.target
-    const canvas = await loadImage(files[0], { canvas: true })
-    canvas.image.toBlob(async (blob) => {
-      const metadata = { hogehoge: 'hoge' }
-
-      const jwt = await upload(metadata, blob, endpoint, firebaseConfig)
-
-      setJwt(jwt)
-    }, files[0].type)
+  const handleChangeFile = () => {
+    const file = fileRef.current.files[0]
+    loadImage.parseMetaData(file, () => {
+      loadImage(
+        file,
+        async (canvas) => {
+          const [, base64Url] = canvas.toDataURL('image/jpeg').split(',')
+          const matadata = { hoge: 'hoge-value' }
+          const jwt = await upload(matadata, base64Url, endpoint)
+          setJwt(jwt)
+        },
+        { canvas: true }
+      )
+    })
   }
 
   return (
@@ -53,7 +49,7 @@ const RevStoreTest = () => {
         </label>
         <TextField
           multiline
-          value={jwt || ''}
+          value={jwt}
           style={{ width: 800 }}
           onChange={(e) => setJwt(e.target.value)}
         />
@@ -62,7 +58,7 @@ const RevStoreTest = () => {
           variant='outlined'
           style={{ width: 150 }}
           onClick={async () => {
-            const decoded = await verify(jwt, firebaseConfig)
+            const decoded = await verify(jwt, endpoint)
             setIsValid(!_.isNull(decoded))
           }}>
           JWT検証
@@ -73,9 +69,12 @@ const RevStoreTest = () => {
         <Button
           variant='outlined'
           style={{ width: 150 }}
-          onClick={async () =>
-            setDownloadUrl(await download(jwt, firebaseConfig))
-          }>
+          onClick={async () => {
+            const expires = DateTime.now()
+              .plus({ years: '10' })
+              .toFormat('MM-dd-yyyy')
+            setDownloadUrl(await download(jwt, expires, endpoint))
+          }}>
           ダウンロード
         </Button>
 
