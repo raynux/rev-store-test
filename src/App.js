@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { DateTime } from 'luxon'
 import { useRef, useState } from 'react'
 import loadImage from 'blueimp-load-image'
 import { Button, Container, TextField, Stack } from '@mui/material'
@@ -20,9 +19,10 @@ const RevStoreTest = () => {
       loadImage(
         file,
         async (canvas) => {
-          const [, base64Url] = canvas.toDataURL('image/jpeg').split(',')
-          const matadata = { hoge: 'hoge-value' }
-          const jwt = await upload(matadata, base64Url, endpoint)
+          const dataUrl = canvas.toDataURL('image/jpeg')
+          const matadata = { contentType: 'image/jpeg' }
+
+          const jwt = await upload(matadata, dataUrl, endpoint)
           setJwt(jwt)
         },
         { canvas: true }
@@ -68,12 +68,7 @@ const RevStoreTest = () => {
         <Button
           variant='outlined'
           style={{ width: 150 }}
-          onClick={async () => {
-            const expires = DateTime.now()
-              .plus({ years: '10' })
-              .toFormat('MM-dd-yyyy')
-            setDownloadUrl(await download(jwt, expires, endpoint))
-          }}>
+          onClick={async () => setDownloadUrl(await download(jwt, endpoint))}>
           ダウンロード
         </Button>
         <TextField

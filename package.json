@@ -12,12 +12,11 @@
     "axios": "^0.27.2",
     "blueimp-load-image": "^5.16.0",
     "lodash": "^4.17.21",
-    "luxon": "^3.0.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "4.0.1",
     "request": "^2.88.2",
-    "rev-store": "^1.3.2",
+    "rev-store": "^1.3.5",
     "web-vitals": "^2.1.4",
     "webpack": "4.44.2"
   },
