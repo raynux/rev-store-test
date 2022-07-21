@@ -12,6 +12,7 @@ const RevStoreTest = () => {
   const [isValid, setIsValid] = useState(null)
 
   const endpoint = process.env.REACT_APP_END_POINT
+  const bucketName = process.env.REACT_APP_BUCKET_NAME
 
   const handleChangeFile = () => {
     const file = fileRef.current.files[0]
@@ -68,7 +69,9 @@ const RevStoreTest = () => {
         <Button
           variant='outlined'
           style={{ width: 150 }}
-          onClick={async () => setDownloadUrl(await download(jwt, endpoint))}>
+          onClick={async () =>
+            setDownloadUrl(await download(jwt, bucketName, endpoint))
+          }>
           ダウンロード
         </Button>
         <TextField
