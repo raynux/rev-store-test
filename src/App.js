@@ -8,32 +8,36 @@ import { upload, verify, download } from 'rev-store'
 const RevStoreTest = () => {
   const fileRef = useRef()
   const [jwt, setJwt] = useState('')
-  const [downloadUrl, setDownloadUrl] = useState('')
+  const [downloadUrls, setDownloadUrls] = useState('')
   const [isValid, setIsValid] = useState(null)
+  const [metadata, setMetadata] = useState([])
+  const [files, setFiles] = useState([])
+  const [dataUrls, setDataUrls] = useState([])
 
   const endpoint = process.env.REACT_APP_END_POINT
   const bucketName = process.env.REACT_APP_BUCKET_NAME
 
-  const handleChangeFile = () => {
-    const file = fileRef.current.files[0]
-    loadImage.parseMetaData(file, () => {
-      loadImage(
-        file,
-        async (canvas) => {
-          const dataUrl = canvas.toDataURL('image/jpeg')
-          const matadata = { contentType: 'image/jpeg' }
-
-          const jwt = await upload(matadata, dataUrl, endpoint)
-          setJwt(jwt)
-        },
-        { canvas: true }
+  const handleChangeFile = () =>
+    _.forEach(fileRef.current.files, (file, i) =>
+      loadImage.parseMetaData(file, () =>
+        loadImage(
+          file,
+          (canvas) => {
+            setMetadata((prev) => _.concat(prev, { contentType: 'image/jpeg' }))
+            setDataUrls((prev) =>
+              _.concat(prev, canvas.toDataURL('image/jpeg'))
+            )
+            setFiles((prev) => _.concat(prev, `hoge_${i}.jpeg`))
+          },
+          { canvas: true }
+        )
       )
-    })
-  }
+    )
 
   return (
     <Container style={{ marginTop: 100 }}>
       <input
+        multiple
         accept='image/jpeg'
         style={{ display: 'none' }}
         id='file-input'
@@ -45,11 +49,29 @@ const RevStoreTest = () => {
       <Stack spacing={2}>
         <label htmlFor='file-input'>
           <Button variant='outlined' component='span' style={{ width: 150 }}>
-            アップロード
+            画像を選択
           </Button>
         </label>
+
+        {_.map(files, (file) => (
+          <div key={file}>{file}</div>
+        ))}
+
+        <Button
+          disabled={_.isEmpty(dataUrls)}
+          variant='outlined'
+          component='span'
+          style={{ width: 150 }}
+          onClick={async () => {
+            const jwt = await upload(metadata, files, dataUrls, endpoint)
+            setJwt(jwt)
+          }}>
+          アップロード
+        </Button>
+
         <TextField
           multiline
+          maxRows={5}
           value={jwt}
           style={{ width: 800 }}
           onChange={(e) => setJwt(e.target.value)}
@@ -64,22 +86,21 @@ const RevStoreTest = () => {
           }}>
           JWT検証
         </Button>
-        <TextField value={_.isNull(isValid) ? '' : isValid} disabled />
+
+        {_.toString(isValid)}
 
         <Button
           variant='outlined'
           style={{ width: 150 }}
           onClick={async () =>
-            setDownloadUrl(await download(jwt, bucketName, endpoint))
+            setDownloadUrls(await download(jwt, bucketName, endpoint))
           }>
           ダウンロード
         </Button>
-        <TextField
-          multiline
-          value={downloadUrl || ''}
-          style={{ width: 800 }}
-          disabled
-        />
+
+        {_.map(downloadUrls, (url) => (
+          <div key={url}>{url}</div>
+        ))}
       </Stack>
     </Container>
   )
