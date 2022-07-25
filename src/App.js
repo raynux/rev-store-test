@@ -10,7 +10,6 @@ const RevStoreTest = () => {
   const [jwt, setJwt] = useState('')
   const [downloadUrls, setDownloadUrls] = useState('')
   const [isValid, setIsValid] = useState(null)
-  const [metadata, setMetadata] = useState([])
   const [files, setFiles] = useState([])
   const [dataUrls, setDataUrls] = useState([])
 
@@ -23,7 +22,6 @@ const RevStoreTest = () => {
         loadImage(
           file,
           (canvas) => {
-            setMetadata((prev) => _.concat(prev, { contentType: 'image/jpeg' }))
             setDataUrls((prev) =>
               _.concat(prev, canvas.toDataURL('image/jpeg'))
             )
@@ -63,7 +61,12 @@ const RevStoreTest = () => {
           component='span'
           style={{ width: 150 }}
           onClick={async () => {
-            const jwt = await upload(metadata, files, dataUrls, endpoint)
+            const jwt = await upload(
+              { contentType: 'image/jpeg' },
+              files,
+              dataUrls,
+              endpoint
+            )
             setJwt(jwt)
           }}>
           アップロード
