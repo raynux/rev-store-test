@@ -9885,10 +9885,10 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-rev-store@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/rev-store/-/rev-store-1.5.3.tgz#abe7b2bf44201ef6de0902676594dd0ad3db2356"
-  integrity sha512-Yg3b9WoSgBYV+kIPXxxqlqyLTBJFf6B+fk0TQeLQ7fGoGbTX+nPEwy8336kJGCQMD8EsNA+TFzNAhxbUE2BmYQ==
+rev-store@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/rev-store/-/rev-store-1.5.4.tgz#6262683bd5a2d938563fcdf8e708b4a2d94faac4"
+  integrity sha512-JmJaLgU0XgEvgJJ322tI51Z5MCix/zov5kHoINCvry1Fo9yXkJgRdFGUIdmUaPjeGFCcr6bEY2XVCQBh9RqGEg==
   dependencies:
     axios "^0.27.2"
     jsonwebtoken "^8.5.1"

@@ -65,6 +65,7 @@ const RevStoreTest = () => {
               { contentType: 'image/jpeg' },
               files,
               dataUrls,
+              bucketName,
               endpoint
             )
             setJwt(jwt)
@@ -95,9 +96,7 @@ const RevStoreTest = () => {
         <Button
           variant='outlined'
           style={{ width: 150 }}
-          onClick={async () =>
-            setDownloadUrls(await download(jwt, bucketName, endpoint))
-          }>
+          onClick={async () => setDownloadUrls(await download(jwt, endpoint))}>
           ダウンロード
         </Button>
 
