@@ -16,7 +16,7 @@
     "react-dom": "^18.0.0",
     "react-scripts": "4.0.1",
     "request": "^2.88.2",
-    "rev-store": "^1.5.4",
+    "rev-store": "^2.0.1",
     "web-vitals": "^2.1.4",
     "webpack": "4.44.2"
   },

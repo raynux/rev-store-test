@@ -14,7 +14,6 @@ const RevStoreTest = () => {
   const [dataUrls, setDataUrls] = useState([])
 
   const endpoint = process.env.REACT_APP_END_POINT
-  const bucketName = process.env.REACT_APP_BUCKET_NAME
 
   const handleChangeFile = () =>
     _.forEach(fileRef.current.files, (file, i) =>
@@ -61,14 +60,17 @@ const RevStoreTest = () => {
           component='span'
           style={{ width: 150 }}
           onClick={async () => {
-            const jwt = await upload(
-              { contentType: 'image/jpeg' },
-              files,
-              dataUrls,
-              bucketName,
-              endpoint
-            )
-            setJwt(jwt)
+            try {
+              const jwt = await upload(
+                { contentType: 'image/jpeg' },
+                files,
+                dataUrls,
+                endpoint
+              )
+              setJwt(jwt)
+            } catch (e) {
+              console.error(e)
+            }
           }}>
           アップロード
         </Button>
@@ -85,8 +87,13 @@ const RevStoreTest = () => {
           variant='outlined'
           style={{ width: 150 }}
           onClick={async () => {
-            const decoded = await verify(jwt, endpoint)
-            setIsValid(!_.isNull(decoded))
+            try {
+              const decoded = await verify(jwt, endpoint)
+              setIsValid(!_.isNull(decoded))
+            } catch (e) {
+              console.error(e)
+              setIsValid(false)
+            }
           }}>
           JWT検証
         </Button>
@@ -96,7 +103,13 @@ const RevStoreTest = () => {
         <Button
           variant='outlined'
           style={{ width: 150 }}
-          onClick={async () => setDownloadUrls(await download(jwt, endpoint))}>
+          onClick={async () => {
+            try {
+              setDownloadUrls(await download(jwt, endpoint))
+            } catch (e) {
+              console.error(e)
+            }
+          }}>
           ダウンロード
         </Button>
 
