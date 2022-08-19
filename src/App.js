@@ -62,7 +62,7 @@ const RevStoreTest = () => {
           onClick={async () => {
             try {
               const jwt = await upload(
-                { contentType: 'image/jpeg' },
+                { foo: 'bar' },  // アップロードするメタデータ
                 files,
                 dataUrls,
                 endpoint
